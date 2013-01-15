@@ -1,0 +1,71 @@
+#!/usr/bin/node
+
+/*
+ * Runs Logger server
+ * Reads configuration from /etc/logger/server.conf
+ */
+var fs = require('fs'),
+    util  = require('util'),
+    argv = require('optimist').argv;
+
+var help = [
+    "usage: start [options] ",
+    "",
+    "Starts a start server using the specified command-line options",
+    "",
+    "options:",
+    "  --config OUTFILE    Location of the configuration file for the proxy server",
+    "  -h, --help          You're staring at it"
+].join('\n');
+
+if (argv.h || argv.help) {
+  return util.puts(help);
+}
+
+var config = {};
+var configPath = '/etc/logger/server.conf';
+if (argv.config) {
+  configPath = argv.config;
+}
+
+try {
+  var data = fs.readFileSync(configPath);
+} catch(ex) {
+  util.puts('[Starter] Enable to read config file: ' + configPath);
+  process.exit(1);
+}
+try {
+  config = JSON.parse(data.toString());
+} catch (ex) {
+  util.puts('[Starter] Enable to parse config file: ' + configPath);
+  process.exit(2);
+}
+
+var loggers = require('../libs/loggers');
+var servers = require('../libs/servers');
+
+var _servers = {};
+var _loggers = {};
+
+var debug = config.debug?true:false;
+
+if(!config.logLevel)
+  config.logLevel = 1;
+
+if(debug) {
+  util.puts("[Starter] Config file: " + configPath);
+}
+
+for(var logger in loggers) {
+  if(debug) util.puts("[Starter] Initialize: " + loggers[logger].Name);
+  _loggers[logger] = new loggers[logger].Logger(config);
+}
+
+for(var server in servers) {
+  if(debug) util.puts("[Starter] Initialize: " + servers[server].Name);
+  _servers[server] = new servers[server].Server(config,_loggers);
+}
+
+if(debug)
+  util.puts("[Starter] started");
+

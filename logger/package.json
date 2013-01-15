@@ -1,0 +1,32 @@
+{
+  "name"        : "mongologger",
+  "version"     : "0.0.1",
+  "description" : "A mongo logger",
+  "homepage"    : "http://slopez.org",
+  "keywords"    : ["logs", "monitoring", "realtime", "node.js", "mongo"],
+  "author"      : "Simon Lopez <simon.lopez@slopez.org>",
+  "contributors": [
+    { "name": "Simon Lopez", "email": "simon.lopez@slopez.org" }
+  ],
+  "repository"  :{
+    "type": "git",
+    "url" : "https://github.com/simonlopez/node-http-proxy"
+  },
+  "dependencies": {
+    "forever"   : ">=0.8.2",
+    "connect"   : "<=1.8.4",
+    "underscore": ">=1.1.7",
+    "mongoose"  : "3.5.4",
+    "optimist"  : "0.3.x",
+    "syslog"    : "0.1.1"
+  },
+  "scripts"     : {
+    "start": "bin/start --config /etc/logger/server.conf"
+  },
+  "bin"         : {
+    "start": "bin/start"
+  },
+  "engines"     : {
+    "node": ">=0.4.9"
+  }
+}
