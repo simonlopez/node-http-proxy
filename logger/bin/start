@@ -58,12 +58,22 @@ if(debug) {
 
 for(var logger in loggers) {
   if(debug) util.puts("[Starter] Initialize: " + loggers[logger].Name);
-  _loggers[logger] = new loggers[logger].Logger(config);
+  try {
+    _loggers[logger] = new loggers[logger].Logger(config);
+  } catch(ex) {
+    if(debug) util.puts("[Starter] Initialization failed: " + loggers[logger].Name);
+    delete _loggers[logger];
+  }
 }
 
 for(var server in servers) {
   if(debug) util.puts("[Starter] Initialize: " + servers[server].Name);
-  _servers[server] = new servers[server].Server(config,_loggers);
+  try {
+    _servers[server] = new servers[server].Server(config,_loggers);
+  } catch(ex) {
+    if(debug) util.puts("[Starter] Initialization failed: " + servers[server].Name);
+    delete _servers[server];
+  }
 }
 
 if(debug)
